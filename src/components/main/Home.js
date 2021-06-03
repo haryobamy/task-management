@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 const Home =() => {
   const [historys, setHistorys] = useState('');
   const [offset, setOffset] = useState(0);
-    const [perPage, setPerPage] = useState(8);
+    const [perPage, setPerPage] = useState(6);
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState([]);
     const [pageCount, setPageCount] = useState('');

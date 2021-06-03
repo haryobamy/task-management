@@ -146,7 +146,10 @@ const ActiveTask = () => {
      const dispatch = useDispatch();
      const classes = useStyles();
      const tasks = useSelector((state) => state.tasks );
-     const taskToUpdate = useSelector((state) => currentId ? state.tasks.find((t) => t._id === currentId) : null );
+    const taskToUpdate = useSelector((state) => currentId ? state.tasks.find((t) => t._id == currentId) : null );
+     
+
+     //setPlanAmount(cables.find(v => v.variation_code === value)?.variation_amount )
 
      const [taskData, setTaskData] = useState({
       tag: '',
@@ -157,14 +160,14 @@ const ActiveTask = () => {
       status:'',
   });
 
+  console.log(taskToUpdate)
+
   useEffect(() => {
     if(taskToUpdate)
     setTaskData(taskToUpdate)
    
   }, [taskToUpdate])
 
-
- 
 
   const clear = ()=> {
     setCurrentId(null);
@@ -192,8 +195,6 @@ const ActiveTask = () => {
       clear();  
     }
 
-  
-
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -207,7 +208,8 @@ const ActiveTask = () => {
           ...taskData,
           [name]:value 
       })
-console.log(value)
+console.log(value);
+
   }
 
      console.log(tasks)

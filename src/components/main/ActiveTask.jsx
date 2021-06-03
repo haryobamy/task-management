@@ -9,7 +9,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import {useDispatch, useSelector} from 'react-redux';
-import {getTasks, updateTask, createTask} from '../../redux/actions/tasks';
+import {getTasks, updateTask, createTask, deleteTask} from '../../redux/actions/tasks';
 
 
 
@@ -164,20 +164,32 @@ const ActiveTask = () => {
   }, [taskToUpdate])
 
 
-  // const editTask = () => {
-  //   handleModalOpen(),
-  //   setCurrentId(task._id)
-  // }
+ 
+
+  const clear = ()=> {
+    setCurrentId(null);
+     setTaskData({
+      tag: '',
+      userHandle:'',
+      description: '',
+      delivery: '',
+      price: '',
+      status:'',
+  });
+
+    
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if(currentId) {
       dispatch(updateTask(currentId,  taskData))
-      handleClose();
       }else{
         dispatch(createTask(taskData))
       }
+      handleModalClose();
+      clear();  
     }
 
   
@@ -334,7 +346,7 @@ console.log(value)
                      </CardContent>
                      <CardContent>
                          <div style={{display:'flex'}}>
-                         <Button className={classes.button}><Badge color='' variant='dot'/>  <span style={{marginLeft:'25px',marginRight:'25px'}}>verify</span> </Button>
+                         <Button className={classes.button}><Badge color='' variant='dot'/>  <span style={{marginLeft:'25px',marginRight:'25px'}}>{task.status}</span> </Button>
                          <IconButton color="" aria-label="notification" >
                          <Badge color='secondary' variant='dot' anchorOrigin={{ vertical:'top', horizontal: 'right', }} >
                          <MessageIcon />
@@ -350,7 +362,7 @@ console.log(value)
                              onClose={handleClose}
                              TransitionComponent={Fade}>
                              <MenuItem onClick={handleClose}> <div onClick={handleModalOpen}><EditIcon fontSize='small' onClick={() => setCurrentId(task._id)} /> <span>Edit</span></div></MenuItem>
-                             <MenuItem onClick={handleClose}><DeleteIcon fontSize='small'/> <span>Delete</span> </MenuItem>
+                             <MenuItem onClick={handleClose}><DeleteIcon fontSize='small' onClick={() => dispatch(deleteTask(task._id))}/> <span>Delete</span> </MenuItem>
                               <MenuItem onClick={handleClose}> <HelpOutlineIcon fontSize='small'/> <span>More info</span> </MenuItem>
 
                                 </Menu>
@@ -366,7 +378,7 @@ console.log(value)
                     >
                     <div  className={classes.paper}>
                     <i className='fa fa-times close' onClick={handleModalClose}></i>
-                    <Typography id="simple-modal-title" variant='h5' > Add New Task</Typography>
+                    <Typography id="simple-modal-title" variant='h5' > Update Task</Typography>
                     <hr/>
                     <div >
                     <form > 
@@ -398,7 +410,7 @@ console.log(value)
                     <textarea cols='6' rows='4' className={classes.input} type='text' required placeholder='e.g Increase confidence.... ' name='description' value={taskData.description} onChange={handleChange} />
                       
 
-                    <Button className={classes.btn} onClick={handleSubmit} >Add Task</Button>
+                    <Button className={classes.btn} onClick={handleSubmit} >Update Task</Button>
                    
                     </form>
                     </div>

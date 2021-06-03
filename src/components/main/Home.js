@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,7 +9,7 @@ import ActiveTask from './ActiveTask';
 import CompletedTask from './completedTask';
 import NavBar from "./NavBar";
 import {Grid} from '@material-ui/core';
-
+import {useDispatch, useSelector} from 'react-redux';
 
 
 
@@ -45,8 +45,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home =() => {
+  const [historys, setHistorys] = useState('');
+  const [offset, setOffset] = useState(0);
+    const [perPage, setPerPage] = useState(8);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [data, setData] = useState([]);
+    const [pageCount, setPageCount] = useState('');
+    const tasks = useSelector((state) => state.tasks );
+    
 
   const classes = useStyles();
+
+
+
+  const handlePagination = (e) => {
+  
+    
+      const data = tasks
+   
+              const slice = data.slice(offset, offset + perPage)
+
+               setHistorys(slice)
+      
+    setPageCount(Math.ceil(data.length / perPage))
+      console.table(slice)
+      console.table(data)
+    
+  
+
+}
+
+  const handlePageClick = (e) => {
+    const selectedPage = e.selected;
+    const offset = selectedPage * perPage;
+
+    setCurrentPage(selectedPage);
+    setOffset(offset);
+    
+    handlePagination();
+
+};
  
 
 
@@ -66,7 +104,7 @@ const Home =() => {
       {/* <Grid fullwidth  > */}
       <Grid className={classes.home} item xs={12} sm={12}>
          
-    <NavBar className={classes.nav}/>
+    <NavBar className={classes.nav}  handlePageClick={handlePageClick} pageCount={pageCount} />
       <BrowserRouter>
       
     <Switch>

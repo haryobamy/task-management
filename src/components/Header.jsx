@@ -1,9 +1,16 @@
-import { Button, Grid, Icon, Typography,InputAdornment, InputLabel,OutlinedInput , FormControl,FilledInput, Modal } from '@material-ui/core'
+import { Button, Grid, Icon, Typography,InputAdornment, InputLabel,OutlinedInput , IconButton,Menu,MenuItem,Fade, FormControl,FilledInput, Modal } from '@material-ui/core'
 import React ,{useState,useEffect} from 'react'
 import logo from '../assests/GetriPay.png'
 import { makeStyles } from '@material-ui/core/styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {createTask} from '../redux/actions/tasks';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import SortIcon from '@material-ui/icons/Sort';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
 
 
 
@@ -140,8 +147,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [modalOpen, setModalOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const tasks = useSelector((state) => state.tasks );
     const dispatch = useDispatch();
+    const [sortData, setSortData] = useState([]);
     const [taskData, setTaskData] = useState({
         tag: '',
         userHandle:'',
@@ -149,15 +160,36 @@ const Header = () => {
         delivery: '',
         price: '',
         status:'',
+        sortType: ''
+        
     })
+
+    useEffect(() => {
+        const sortArray = type => {
+          const types = {
+            ascending: 'ascending',
+            descending: 'descending',
+            price: 'price',
+            tag:'tag'
+          };
+          const sortProperty = types[type];
+          const sorted = [...tasks].sort((a, b) => b[sortProperty] - a[sortProperty]);
+          setSortData(sorted);
+          console.table(sorted)
+        };
+    
+        sortArray(taskData.sortType);
+      }, [taskData.sortType]); 
+
+
 
     
     const handleOpen = () => {
-        setOpen(true);
+        setModalOpen(true);
       };
     
-      const handleClose = () => {
-        setOpen(false);
+      const handleModalClose = () => {
+        setModalOpen(false);
       };
       const handleChange = (e) => {
           const {name, value} = e.target
@@ -168,11 +200,25 @@ const Header = () => {
  console.log(value)
       }
 
+      
+
       const handleSubmit = (e) => {
           e.preventDefault();
           dispatch(createTask(taskData))
-          handleClose();
+          handleModalClose();
       }
+
+
+
+      const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    
+      const handleClose = (event) => {
+        setAnchorEl(!event.currentTarget);
+      };
+
+
 
 
    
@@ -201,18 +247,43 @@ const Header = () => {
             id="filled-adornment-amount"
             startAdornment={<InputAdornment style={{ paddingLeft:'10px'}} position="start">  <Icon fontSize='small' style={{color:'lightgray', size:'20px',}}>search</Icon> </InputAdornment>}
             placeholder='search keyword'
-            endAdornment= {<Button className={classes.sort} >Sortby<Icon>sort </Icon></Button>}
+            endAdornment= { <IconButton  className={classes.sort}>
+
+
+                Sort by
+                <SortIcon onClick={handleClick} />
+                <Menu 
+                id="fade-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={open}
+                
+                onClose={handleClose}
+                TransitionComponent={Fade}>
+
+<select className='' name='sortType' value={taskData.sortType} onChange={handleChange}>
+                        <option value='ascending'>Ascending</option>
+                        <option value='descending'> Descending</option>
+                        <option value='price'>Price</option>
+                        <option value='tags'>Tags</option>
+                        
+                    </select>
+                
+
+                   </Menu>
+            </IconButton>}
+            
           />
         </FormControl>
 
         <Modal
-                    open={open}
-                    onClose={handleClose}
+                    open={modalOpen}
+                    onClose={handleModalClose}
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
                     >
                     <div  className={classes.paper}>
-                    <i className='fa fa-times close' onClick={handleClose}></i>
+                    <i className='fa fa-times close' onClick={handleModalClose}></i>
                     <Typography id="simple-modal-title" variant='h5' > Add New Task</Typography>
                     <hr/>
                     <div >
@@ -260,3 +331,20 @@ const Header = () => {
 }
 
 export default Header
+
+
+
+{/*<Menu 
+            id="fade-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Fade}>
+            <MenuItem onClick={handleClose}> By Task Price </MenuItem>
+            <MenuItem onClick={handleClose}>Ascending</MenuItem>
+             <MenuItem onClick={handleClose}> Descending </MenuItem>
+
+               </Menu><MenuItem onClick={handleClose} name='sortType'  value='price' onSelect={handleSortChange}  > <div ><AttachMoneyIcon name='price'  fontSize='small'   /> <span>By Task Price </span></div></MenuItem>
+                <MenuItem onClick={handleClose} name='sortType' value='ascending' onSelect={handleSortChange}><ZoomOutIcon fontSize='small' /> <span>Ascending</span> </MenuItem>
+                 <MenuItem onClick={handleClose} name='sortType' value='descending' onSelect={handleSortChange} > <ZoomInIcon fontSize='small'/> <span>Descending</span> </MenuItem> */}

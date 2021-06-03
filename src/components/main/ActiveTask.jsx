@@ -166,7 +166,7 @@ const ActiveTask = () => {
 
   // const editTask = () => {
   //   handleModalOpen(),
-   
+  //   setCurrentId(task._id)
   // }
 
   const handleSubmit = (e) => {
@@ -349,7 +349,7 @@ console.log(value)
                              open={open}
                              onClose={handleClose}
                              TransitionComponent={Fade}>
-                             <MenuItem onClick={handleClose}> <EditIcon fontSize='small' onClick={() => setCurrentId(task._id), handleModalOpen()} /> <span>Edit</span></MenuItem>
+                             <MenuItem onClick={handleClose}> <div onClick={handleModalOpen}><EditIcon fontSize='small' onClick={() => setCurrentId(task._id)} /> <span>Edit</span></div></MenuItem>
                              <MenuItem onClick={handleClose}><DeleteIcon fontSize='small'/> <span>Delete</span> </MenuItem>
                               <MenuItem onClick={handleClose}> <HelpOutlineIcon fontSize='small'/> <span>More info</span> </MenuItem>
 

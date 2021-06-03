@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import logo from './assests/GetriPay.png';
 import './App.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import Header from "./components/Header"
+import Home from "./components/main/Home";
+import {CssBaseline, Typography,Container } from '@material-ui/core';
+
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <CssBaseline />
+       <Container maxWidth='lg'>
+       {/* <div className='container'> */}
+      
+      <Header />
+      <div className='app__body'>
+      <Home />
+       </div>   
+</Container>
     </div>
+    // </div>
   );
 }
 
